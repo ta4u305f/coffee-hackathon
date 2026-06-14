@@ -1,11 +1,14 @@
-from flask import Flask, request
+from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    text = 'Hello Flask with uv! <a href="/test">ここをクリックすると別のサイトにジャンプします</a>'
-    return text
+    return """
+    <h1>ホームページ</h1>
+    <p>'<a href="/test">登録する</a>'</p>
+    <p>'<a href="/mypage">マイページを確認する</a>'</p>
+"""
 
 @app.route("/test", methods=["GET", "POST"])
 def test():
@@ -13,28 +16,28 @@ def test():
     if request.method == "POST":
         print (request.form.to_dict())
 
-    html = """
+    html_form = """
     <html>
         <form action="/test" method="post">
             <div>
                 <label for="company_name">会社名</label>
-                <input type="text" id="company_name" name="company_name">
+                <input type="text" id="company_name" name="company_name" required>
             </div>
             <div>
                 <label for="company_name_kana">会社名（かな）</label>
-                <input type="text" id="company_name_kana" name="company_name_kana">
+                <input type="text" id="company_name_kana" name="company_name_kana" required>
             </div>
             <div>
                 <label for="contact_name">担当者名</label>
-                <input type="text" id="contact_name" name="contact_name">
+                <input type="text" id="contact_name" name="contact_name" required>
             </div>
             <div>
                 <label for="address">住所</label>
-                <textarea id="address" name="address"></textarea>
+                <textarea id="address" name="address" required></textarea>
             </div>
             <div>
                 <label for="phone_number">電話番号</label>
-                <input type="tel" id="phone_number" name="phone_number">
+                <input type="tel" id="phone_number" name="phone_number" required>
             </div>
             <div>
                 <label for="email">メール</label>
@@ -42,7 +45,7 @@ def test():
             </div>
             <div>
                 <label for="prefecture">都道府県</label>
-                    <select name="都道府県", id="prefecture" name="prefecture">
+                    <select name="都道府県", id="prefecture" name="prefecture" required>
                     <option value="" selected>選択してください</option>
                     <option value="北海道">北海道</option>
                     <option value="青森県">青森県</option>
@@ -133,4 +136,47 @@ def test():
         </form>
     </html>
     """
-    return html
+    return html_form
+
+@app.route("/mypage")
+def mypage():
+
+    mydata: dict[str, str] = {
+        "company_name": "A team",
+        "company_name_kana": "えー ちーむ",
+        "contact_name": "so yamagu",
+        "address": "熊野神社の横",
+        "phone_number": "01234567890",
+        "email": "42@42.jp",
+        "prefecture": "北海道",
+        "product_name": "できてるといいな",
+        "category": "フルーティー (FR)"
+    }
+
+    html_mypage = """
+    <!DOCTYPE html>
+    <html lang="ja">
+        <head>
+          <meta charset="UTF-8">
+          <title>マイページ</title>
+        </head>
+        <body>
+          <h1>マイページ</h1>
+
+          <p>[会社名]: {{ user["company_name"] }}</p>
+          <p>[会社名（かな）]: {{ user["company_name_kana"] }}</p>
+          <p>[担当者名]: {{ user["contact_name"] }}</p>
+          <p>[住所]: {{ user["address"] }}</p>
+          <p>[電話番号]: {{ user["phone_number"] }}</p>
+          <p>[メール]: {{ user["email"] }}</p>
+          <p>[都道府県]: {{ user["prefecture"] }}</p>
+          <p>[商品名]: {{ user["product_name"] }}</p>
+          <p>[部門]: {{ user["category"] }}</p>
+
+          <p>
+            <a href="/">メール確認ページに戻る</a>
+          </p>
+        </body>
+    </html>
+    """
+    return render_template_string(html_mypage, user=mydata)
