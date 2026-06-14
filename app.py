@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template_string
+from db_roaster import RosterDBManager
 
 app = Flask(__name__)
 
@@ -12,9 +13,10 @@ def index():
 
 @app.route("/test", methods=["GET", "POST"])
 def test():
-
+    rdbm = RosterDBManager()
     if request.method == "POST":
-        print (request.form.to_dict())
+        rdbm.create_user(request.form.to_dict())
+
 
     html_form = """
     <html>
@@ -140,18 +142,8 @@ def test():
 
 @app.route("/mypage")
 def mypage():
-
-    mydata: dict[str, str] = {
-        "company_name": "A team",
-        "company_name_kana": "えー ちーむ",
-        "contact_name": "so yamagu",
-        "address": "熊野神社の横",
-        "phone_number": "01234567890",
-        "email": "42@42.jp",
-        "prefecture": "北海道",
-        "product_name": "できてるといいな",
-        "category": "フルーティー (FR)"
-    }
+    rdbm = RosterDBManager()
+    mydata: dict[str, str] = rdbm.get_all_user()[0]
 
     html_mypage = """
     <!DOCTYPE html>
@@ -170,8 +162,8 @@ def mypage():
           <p>[電話番号]: {{ user["phone_number"] }}</p>
           <p>[メール]: {{ user["email"] }}</p>
           <p>[都道府県]: {{ user["prefecture"] }}</p>
-          <p>[商品名]: {{ user["product_name"] }}</p>
-          <p>[部門]: {{ user["category"] }}</p>
+          <p>[商品名]: {{ "表示したかったです。" }}</p>
+          <p>[部門]: {{ "表示したかったです。" }}</p>
 
           <p>
             <a href="/">メール確認ページに戻る</a>
