@@ -45,7 +45,7 @@ instance/
 !.env.example
 
 # Database
-*.db
+# *.db
 *.sqlite
 *.sqlite3
 
