@@ -47,7 +47,7 @@ def test():
             </div>
             <div>
                 <label for="prefecture">都道府県</label>
-                    <select name="都道府県", id="prefecture" name="prefecture" required>
+                    <select name="prefecture", id="prefecture" name="prefecture" required>
                     <option value="" selected>選択してください</option>
                     <option value="北海道">北海道</option>
                     <option value="青森県">青森県</option>
@@ -98,42 +98,6 @@ def test():
                     <option value="沖縄県">沖縄県</option>
                 </select>
             </div>
-            <div>
-                <label for="product_name">商品名</label>
-                <input type="text" id="product_name" name="product_name" required>
-            </div>
-            <div>
-                <p>部門</p>
-                <label>
-                    <input type="radio" name="category" value="フルーティー" required>
-                    フルーティー (FR)
-                </label>
-
-                <label>
-                    <input type="radio" name="category" value="フローラル">
-                    フローラル (FL)
-                </label>
-
-                <label>
-                    <input type="radio" name="category" value="ナッティ">
-                    ナッティ (NT)
-                </label>
-
-                <label>
-                    <input type="radio" name="category" value="チョコレート">
-                    チョコレート (CH)
-                </label>
-
-                <label>
-                    <input type="radio" name="category" value="スパイシー">
-                    スパイシー (SP)
-                </label>
-
-                <label>
-                    <input type="radio" name="category" value="シトラス">
-                    シトラス (CT)
-                </label>
-            </div>
             <input type="submit" value="送信する">
         </form>
     </html>
@@ -143,7 +107,7 @@ def test():
 @app.route("/mypage")
 def mypage():
     rdbm = RosterDBManager()
-    mydata: dict[str, str] = rdbm.get_all_user()[0]
+    mydata: dict[str, str] = rdbm.get_all_user()[-1]
 
     html_mypage = """
     <!DOCTYPE html>
